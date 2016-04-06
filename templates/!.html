@@ -1,0 +1,30 @@
+{%- set defaultTitle = 'Mini Barrages' -%}
+
+{%- import '_macro.html' as macro -%}
+
+{%- spaceless -%}
+  <!DOCTYPE html>
+  <html>
+    <head>
+      <meta charset="utf-8" />
+      <title>{{ title or defaultTitle }}</title>
+      <meta http-equiv="X-UA-Compatible" content="IE=edge">
+      <meta name="viewport" content="width=device-width,initial-scale=1" />
+      <meta name="renderer" content="webkit|ie-comp|ie-stand" />
+      <meta name="description" content="" />
+      <meta name="author" content="PeckZeg" />
+      {% block css %}{% endblock %}
+    </head>
+
+    <body>
+      {% block body %}{% endblock %}
+
+      {% if isDev %}
+        <script type="text/javascript">ENV = 'development';</script>
+        {{ macro.script('//%s:%s/livereload.js'|format(livereload.host, livereload.port)) }}
+      {% endif %}
+
+      {% block script %}{% endblock %}
+    </body>
+  </html>
+{%- endspaceless -%}

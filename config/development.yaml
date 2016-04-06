@@ -1,0 +1,27 @@
+---
+  # 应用名称
+  appName: express-project
+
+  # 端口
+  port: 8080
+
+  # 错误模板
+  errorTemplate: error
+
+  # 公开文件夹
+  publicFolder:
+    static: static/dest
+    templates: templates
+
+  # 模板文件夹
+  folder:
+    static: /static
+    css:    /static/css
+    script: /static/js
+    images: /static/images
+    plugins: /static/plugins
+
+  # Grunt Livereload
+  livereload:
+    host: "127.0.0.1"
+    port: 35723

@@ -1,0 +1,11 @@
+{%- macro script(src) -%}
+  {%- spaceless -%}
+    <script type="text/javascript" src="{{ src }}"></script>
+  {%- endspaceless -%}
+{%- endmacro -%}
+
+{%- macro css(href) -%}
+  {%- spaceless -%}
+    <link rel="stylesheet" type="text/css" href="{{ href }}">
+  {%- endspaceless -%}
+{%- endmacro -%}
