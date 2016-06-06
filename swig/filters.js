@@ -1,5 +1,3 @@
-const util = require('util');
-
 const SWIG_FILTERS = {
     return: (cond, val1, val2) => {
         return cond ? val1 : val2
@@ -9,10 +7,10 @@ const SWIG_FILTERS = {
         return RegExp(pattern).test(val);
     },
 
-    format: util.format,
+    format: require('util').format,
 };
 
-module.exports = (swig) => {
+module.exports = function(swig) {
     _.each(SWIG_FILTERS, (filter, filterName) => {
         swig.setFilter(filterName, filter);
     });

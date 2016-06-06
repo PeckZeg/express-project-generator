@@ -1,4 +1,11 @@
+process.stdout.isTTY = true;
+
+global.resolve = require('app-root-path').resolve;
 global.reqlib = require('app-root-path').require;
+global.reqyaml = require('req-yaml');
+global.colors = require('colors/safe');
+global.moment = require('moment');
+global.async = require('async');
 global._ = require('lodash');
 
 const config = reqlib('config');
@@ -14,13 +21,9 @@ const debug = require('debug')(`${config.appName}:server`);
 const http = require('http');
 const compression = require('compression');
 
-const swigFilters = reqlib('swig/filters')(swig);
+reqlib('swig/filters')(swig);
 
-const TEMPLATE_PATHNAME = path.join(__dirname, config.publicFolder.templates);
-
-const ROUTES = {
-    index: reqlib('routes/index')
-};
+const ROUTES = reqyaml(resolve('config/routes'));
 
 const API_ROUTES = {};
 
@@ -28,12 +31,12 @@ var app = express();
 
 //  视图引擎设置
 app.set('port', config.port);
-app.set('views', TEMPLATE_PATHNAME);
+app.set('views', resolve(config.publicFolder.templates));
 app.set('view engine', 'html');
 app.set('view cache', false);
 app.engine('html', swig.renderFile);
 swig.setDefaults({
-    loader: swig.loaders.fs(TEMPLATE_PATHNAME),
+    loader: swig.loaders.fs(resolve(config.publicFolder.templates)),
     cache: false,
 });
 
@@ -47,9 +50,14 @@ app.use(compression());
 app.use('/static',express.static(path.join(__dirname, config.publicFolder.static)));
 
 //  页面路由
-_.each(ROUTES, (router, pathname) => {
-    if (pathname == 'index') pathname = '';
-    app.use(`/${pathname}`, router);
+_.each(ROUTES, router => {
+    if (_.isString(router)) {
+        app.use(`/${router}`, reqlib(`routes/${router}`));
+    }
+
+    else {
+        app.use(`/${router.pathname}`, reqlib(`routes/${router.router}`));
+    }
 });
 
 //  接口路由
@@ -75,7 +83,7 @@ var server = http.createServer(app);
 
 server.listen(config.port);
 
-server.on('error', (err) => {
+server.on('error', err => {
     if (err.syscall !== 'listen') throw err;
 
     var bind = _.isString(config.port) ? `Pipe ${config.port}` : 
@@ -102,5 +110,5 @@ server.on('listening', () => {
     var addr = server.address(),
         bind = _.isString(addr) ? `pipe ${addr}` : `port ${addr.port}`;
 
-    debug(`Listening on ${bind}`);
+    console.log(`Listening on ${colors.yellow(bind)}`);
 });

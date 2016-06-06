@@ -8,6 +8,11 @@
   # 错误模板
   errorTemplate: error
 
+  # routes
+  # routes:
+  #   - pathname: /
+  #     router: index
+
   # 公开文件夹
   publicFolder:
     static: static/dest

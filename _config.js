@@ -1,4 +1,5 @@
-const reqYAML = require('req-yaml');
+const reqyaml = require('req-yaml');
+const resolve = require('app-root-path').resolve;
 const path = require('path');
 const _ = require('lodash');
 
@@ -9,4 +10,5 @@ module.exports = _.defaults({
     isDev: ENV === 'development',
     env: ENV,
     envList: ENV_LIST,
-}, reqYAML(path.join(__dirname, 'config', `${ENV}.yaml`)));
+}, reqyaml(resolve(`config/${ENV}.yaml`))));
+
